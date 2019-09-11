@@ -2,6 +2,18 @@
 
 int	main(void)
 {
-	ft_printf("wow, hello\n");
+	ft_printf("hello\n");
+
+   
+
+
+
+
+
+
 	return  (0);
 }
+
+
+
+

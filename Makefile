@@ -2,7 +2,10 @@ MAKE=make
 NAME=kmills.filler
 SRCS=SRCS/main.c
 OBJS=$(SRCS:SRCS%.c=OBJS%.o)
-INCLUDES=INCLUDES/
+HEADER=INCLUDES/filler.h
+INCLUDES=INCLUDES
+LIBFT=libft/libft.a
+LIBFTCFILES = libft/*.c
 A_FILES=libft/libft.a libft/libftprintf.a
 NO_COLOR=\x1b[0m
 OK_COLOR=\x1b[32;01m
@@ -16,13 +19,15 @@ override G +=
 
 all: $(NAME)
 
-$(NAME): $(OBJS) $(INCLUDES)
-	@$(MAKE) -C libft
-	@gcc $(A_FILES) $(OBJS) -o $(NAME)
+$(NAME): $(OBJS) $(INCLUDES) $(LIBFT)
+	gcc $(A_FILES) $(OBJS) -o $(NAME)
 	@$(ECHO) "$(COMPILING_STRING)"
 
-OBJS/%.o: SRCS/%.c $(INCLUDES)
-	@gcc -c $< -I$(INCLUDES) -o $@
+$(LIBFT): $(LIBFTCILES)
+	$(MAKE) -C libft
+
+$(OBJS): $(SRCS) $(HEADER)
+	gcc -c $< -I$(INCLUDES) -I$(LIBFT) -o $@
 
 clean:
 	@rm -f $(OBJS)
