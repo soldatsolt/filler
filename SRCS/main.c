@@ -336,9 +336,46 @@ void	place_to_put_piece(t_filler *filler)
 	}
 }
 
+void	parse_dots(t_filler *filler, char *str)
+{
+	int	j;
+	int	i;
+
+	i = 0;
+	j = ft_atoi(str);
+	while (i < filler->x_size)
+	{
+		if (str[i + 4] == filler->dot_small || str[i + 4] == filler->dot_big)
+			filler->map[i][j] = -10;
+		if (str[i + 4] == filler->enemy_dot_small || str[i + 4] == filler->enemy_dot_big)
+			filler->map[i][j] = -20;
+		i++;
+	}
+}
+
 void	scan_grid_to_map(t_filler *filler)
 {
+	char	*str;
+	int		i;
 
+	i = 0;
+	while (i++ < 3)
+	{
+		get_next_line(3, &str);
+		ft_strdel(&str);
+	}
+	while (get_next_line(3, &str))
+	{
+		if (ft_strchr_n(str, filler->dot_big) || ft_strchr_n(str, filler->dot_small) || \
+		ft_strchr_n(str, filler->enemy_dot_big) || ft_strchr_n(str, filler->enemy_dot_small))
+			parse_dots(filler, str);
+		if (str[0] == 'P' && str[1] == 'i')
+		{
+			parse_piece(filler, str);
+			ft_strdel(&str);
+			break ;
+		}
+	}
 }
 
 void	init_filler(t_filler *filler)
@@ -354,9 +391,11 @@ void	init_filler(t_filler *filler)
 	ft_printf("%d %d\n", filler->x, filler->y);
 	// while(1)
 	// {
+		allocate_mem_for_map(filler);
 		scan_grid_to_map(filler);
+		allocate_mem_for_piece(filler);
 	// }
-	// print_map(filler);
+	print_map(filler);
 	// print_piece(filler);
 }
 
