@@ -180,11 +180,6 @@ void	allocate_mem_for_piece(t_filler *filler)
 	}
 }
 
-void	scan_grid_to_map(t_filler *filler)
-{
-
-}
-
 void	scan_piece(t_filler *filler)
 {
 	int		i;
@@ -207,6 +202,7 @@ void	scan_piece(t_filler *filler)
 		}
 		i++;
 		j = 0;
+		ft_strdel(&str);
 	}
 }
 
@@ -268,6 +264,51 @@ void	minus_map_and_piece(t_filler *filler, int x, int y)
 	}
 }
 
+int		is_9_is_alone(t_filler *filler)
+{
+	int	i;
+	int	j;
+	int	k;
+
+	k = 0;
+	i = 0;
+	j = 0;
+	while (j < filler->y_size)
+	{
+		while (i < filler->x_size)
+		{
+			if (filler->map[i][j] == -9)
+				k++;
+			i++;
+		}
+		i = 0;
+		j++;
+	}
+	if (k == 1)
+		return (1);
+	return (0);
+}
+
+void	free_map_and_piece(t_filler *filler)
+{
+	int	i;
+
+	i = 0;
+	while (i < filler->x_size)
+	{
+		free(filler->map[i]);
+		i++;
+	}
+	i = 0;
+	while (i < filler->piece_x_size)
+	{
+		free(filler->piece[i]);
+		i++;
+	}
+	free(filler->map);
+	free(filler->piece);
+}
+
 void	place_to_put_piece(t_filler *filler)
 {
 	int		i;
@@ -275,19 +316,29 @@ void	place_to_put_piece(t_filler *filler)
 
 	i = 0;
 	j = 0;
-	while (i + filler->piece_x_size - 1 < filler->x_size)
+	while (j + filler->piece_y_size - 1 < filler->y_size)
 	{
-		while (j + filler->piece_y_size - 1 < filler->y_size)
+		while (i + filler->piece_x_size - 1 < filler->x_size)
 		{
 			summ_map_and_piece(filler, i, j);
-			print_map(filler);
+			if (is_9_is_alone(filler))
+			{
+				filler->x = i;
+				filler->y = j;
+				minus_map_and_piece(filler, i ,j);
+				return;
+			}
 			minus_map_and_piece(filler, i ,j);
-			write(1, "\n\n\n",3 );
-			j++;
+			i++;
 		}
-		j = 0;
-		i++;
+		i = 0;
+		j++;
 	}
+}
+
+void	scan_grid_to_map(t_filler *filler)
+{
+
 }
 
 void	init_filler(t_filler *filler)
@@ -296,14 +347,17 @@ void	init_filler(t_filler *filler)
 	// начале первой фигуры для игрока 1
 	allocate_mem_for_piece(filler);
 	scan_piece(filler);
-	filler->map[filler->start_x][filler->start_y] = -1;
-	filler->map[filler->enemy_start_x][filler->enemy_start_x] = -2;
+	filler->map[filler->start_x][filler->start_y] = -10;
+	filler->map[filler->enemy_start_x][filler->enemy_start_x] = -20;
 	place_to_put_piece(filler);
-	{
+	free_map_and_piece(filler);
+	ft_printf("%d %d\n", filler->x, filler->y);
+	// while(1)
+	// {
 		scan_grid_to_map(filler);
-	}
-	print_map(filler);
-	print_piece(filler);
+	// }
+	// print_map(filler);
+	// print_piece(filler);
 }
 
 int		main(void)
