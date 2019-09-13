@@ -27,8 +27,10 @@ void	bzero_filler(t_filler *filler)
 	filler->player = 0;
 	filler->x_size = 0;
 	filler->y_size = 0;
-	filler->start_x = 0;
-	filler->start_y = 0;
+	filler->start_x = -1;
+	filler->start_y = -1;
+	filler->enemy_start_x = -1;
+	filler->enemy_start_y = -1;
 	filler->dot_big = 0;
 	filler->dot_small = 0;
 	filler->enemy_dot_small = 0;
@@ -94,6 +96,15 @@ void	mark_dots_after_player(t_filler *filler)
 	}
 }
 
+void	parse_piece(t_filler *filler, char *str)
+{
+	filler->piece_y_size = ft_atoi(str + 5);
+	str += ft_strlen(str) - 2;
+	while (ft_isdigit(*str))
+		str--;
+	filler->piece_x_size = ft_atoi(str);
+}
+
 void	parser(t_filler *filler)
 {
 	char	*str;
@@ -109,14 +120,18 @@ void	parser(t_filler *filler)
 			filler->player = player_number(str);
 		if (!(filler->y_size))
 			find_map_size(filler, str);
-		if (!(filler->start_y))
+		if (filler->start_y == -1 || filler->enemy_start_y == -1)
 			find_start_point(filler, str);
-		if ((filler->player) && (filler->y_size) && (filler->start_y))
+		if ((filler->enemy_start_y != -1) && (filler->start_y != -1) && \
+		!(ft_strchr_n(str, '.')))
 			break ;
 		ft_strdel(&str);
 	}
 	if (str)
+	{
+		parse_piece(filler, str);
 		ft_strdel(&str);
+	}
 }
 
 void	print_map(t_filler *filler)
@@ -152,19 +167,143 @@ void	allocate_mem_for_map(t_filler *filler)
 	}
 }
 
+void	allocate_mem_for_piece(t_filler *filler)
+{
+	int	i;
+
+	i = 0;
+	filler->piece = (int **)xmalloc(sizeof(int *) * filler->piece_x_size);
+	while (i < filler->piece_x_size)
+	{
+		filler->piece[i] = (int *)xmalloc(sizeof(int) * filler->piece_y_size);
+		i++;
+	}
+}
+
 void	scan_grid_to_map(t_filler *filler)
 {
 
 }
 
+void	scan_piece(t_filler *filler)
+{
+	int		i;
+	char	*str;
+	int		j;
+
+	j = 0;
+	i = 0;
+	str = NULL;
+	while (i < filler->piece_y_size)
+	{
+		get_next_line(3, &str);
+		while (str[j])
+		{
+			if (str[j] == '.')
+				filler->piece[j][i] = 0;
+			else
+				filler->piece[j][i] = 1;
+			j++;
+		}
+		i++;
+		j = 0;
+	}
+}
+
+void	print_piece(t_filler *filler)
+{
+	int	i;
+	int	j;
+
+	i = 0;
+	j = 0;
+	while (j < filler->piece_y_size)
+	{
+		while (i < filler->piece_x_size)
+		{
+			ft_printf("%3d", filler->piece[i][j]);
+			i++;
+		}
+		write(1, "\n", 1);
+		i = 0;
+		j++;
+	}
+}
+
+void	summ_map_and_piece(t_filler *filler, int x, int y)
+{
+	int		i;
+	int		j;
+
+	i = 0;
+	j = 0;
+	while (i < filler->piece_x_size)
+	{
+		while (j < filler->piece_y_size)
+		{
+			filler->map[x + i][y + j] += filler->piece[i][j];
+			j++;
+		}
+		j = 0;
+		i++;
+	}
+}
+
+void	minus_map_and_piece(t_filler *filler, int x, int y)
+{
+	int		i;
+	int		j;
+
+	i = 0;
+	j = 0;
+	while (i < filler->piece_x_size)
+	{
+		while (j < filler->piece_y_size)
+		{
+			filler->map[x + i][y + j] -= filler->piece[i][j];
+			j++;
+		}
+		j = 0;
+		i++;
+	}
+}
+
+void	place_to_put_piece(t_filler *filler)
+{
+	int		i;
+	int		j;
+
+	i = 0;
+	j = 0;
+	while (i + filler->piece_x_size - 1 < filler->x_size)
+	{
+		while (j + filler->piece_y_size - 1 < filler->y_size)
+		{
+			summ_map_and_piece(filler, i, j);
+			print_map(filler);
+			minus_map_and_piece(filler, i ,j);
+			write(1, "\n\n\n",3 );
+			j++;
+		}
+		j = 0;
+		i++;
+	}
+}
+
 void	init_filler(t_filler *filler)
 {
-	allocate_mem_for_map(filler);
-	if (filler->player == 1)
+	allocate_mem_for_map(filler);// тут у нас указатель файла стоит на 
+	// начале первой фигуры для игрока 1
+	allocate_mem_for_piece(filler);
+	scan_piece(filler);
+	filler->map[filler->start_x][filler->start_y] = -1;
+	filler->map[filler->enemy_start_x][filler->enemy_start_x] = -2;
+	place_to_put_piece(filler);
 	{
 		scan_grid_to_map(filler);
 	}
 	print_map(filler);
+	print_piece(filler);
 }
 
 int		main(void)

@@ -4,6 +4,8 @@
 
 typedef	struct	s_filler
 {
+	int			x;
+	int			y;
 	int			**map;
 	int			start_x;
 	int			start_y;
@@ -16,5 +18,8 @@ typedef	struct	s_filler
 	char		dot_big;
 	char		enemy_dot_small;
 	char		enemy_dot_big;
+	int			piece_x_size;
+	int			piece_y_size;
+	int			**piece;
 }				t_filler;
 #endif

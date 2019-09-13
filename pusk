@@ -4,9 +4,9 @@
 #                                              #
 # -------------------------------------------- #
 launched players/grati.filler
-$$$ exec p1 : [players/grati.filler]
+$$$ exec p1 : [players/kmills.filler]
 launched players/hcao.filler
-$$$ exec p2 : [players/kmills.filler]
+$$$ exec p2 : [players/grati.filler]
 Plateau 24 40:
     0123456789012345678901234567890123456789
 000 ........................................
