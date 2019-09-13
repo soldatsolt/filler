@@ -4,12 +4,14 @@
 
 typedef	struct	s_filler
 {
+	int			**map;
 	int			start_x;
 	int			start_y;
+	int			enemy_start_x;
+	int			enemy_start_y;
 	int			x_size;
 	int			y_size;
 	int			player;
-	int			**map;
 	char		dot_small;
 	char		dot_big;
 	char		enemy_dot_small;

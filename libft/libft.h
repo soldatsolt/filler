@@ -6,7 +6,7 @@
 /*   By: kmills <kmills@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/12/20 20:27:38 by kmills            #+#    #+#             */
-/*   Updated: 2019/09/11 03:35:56 by kmills           ###   ########.fr       */
+/*   Updated: 2019/09/13 09:25:34 by kmills           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -120,5 +120,6 @@ char			*ft_itoa_base_big_l(unsigned long n, int base);
 char			*ft_itoa_base_big_ll(unsigned long long n, int base);
 char			*ft_itoa_base_big_hh(u_int8_t n, int base);
 int				ft_printf(const char *restrict format, ...);
+void			*xmalloc(size_t size);
 
 #endif

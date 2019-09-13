@@ -81,7 +81,8 @@ SRCS = ./ft_itoa_base_big_ll.c \
 	   ./ft_lstiter.c \
 	   ./ft_lstmap.c \
 	   ./ft_lstnew.c \
-	   ./ft_atoi_base.c
+	   ./ft_atoi_base.c\
+	   ./xmalloc.c
 OBJS = $(SRCS:.c=.o)
 INCLUDES = libft.h
 FLAGS = -Wall -Wextra -Werror

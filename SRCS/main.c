@@ -21,7 +21,7 @@ int		player_number(char *str)
 	return (0);
 }
 
-void	init_filler(t_filler *filler)
+void	bzero_filler(t_filler *filler)
 {
 	filler->map = NULL;
 	filler->player = 0;
@@ -48,16 +48,29 @@ void	find_map_size(t_filler *filler, char *str)
 
 void	find_start_point(t_filler *filler, char *str)
 {
-	int	i;
+	int		i;
+	char	*s;
 
 	i = 4;
-	if (!(filler->dot_big && filler->dot_small && \
-	ft_strchr_n(str, filler->dot_big)))
+	if (!(filler->dot_big && filler->dot_small) && (ft_strchr_n(str, \
+	filler->dot_big) || ft_strchr_n(str, filler->enemy_dot_big)))
 		return ;
-	filler->start_y = ft_atoi(str);
-	while (str[i] == '.' || str[i] == filler->enemy_dot_big)
-		i++;
-	filler->start_x = i - 4;
+	s = ft_strdup(str);
+	if (ft_strchr_n(str, filler->dot_big))
+	{
+		filler->start_y = ft_atoi(str);
+		while (str[i] == '.' || str[i] == filler->enemy_dot_big)
+			i++;
+		filler->start_x = i - 4;
+	}
+	if (ft_strchr_n(str, filler->enemy_dot_big))
+	{
+		filler->enemy_start_y = ft_atoi(s);
+		while (s[i] == '.' || s[i] == filler->dot_big)
+			i++;
+		filler->enemy_start_x = i - 4;
+	}
+	ft_strdel(&s);
 }
 
 void	mark_dots_after_player(t_filler *filler)
@@ -84,11 +97,10 @@ void	mark_dots_after_player(t_filler *filler)
 void	parser(t_filler *filler)
 {
 	char	*str;
-	int		i;
 
 	str = NULL;
 	open("pusk", O_RDONLY);
-	init_filler(filler);
+	bzero_filler(filler);
 	while (get_next_line(3, &str))
 	{
 		if (filler->player && !filler->dot_big && !filler->dot_small)
@@ -105,7 +117,54 @@ void	parser(t_filler *filler)
 	}
 	if (str)
 		ft_strdel(&str);
-	close(3);
+}
+
+void	print_map(t_filler *filler)
+{
+	int	i;
+	int	j;
+
+	i = 0;
+	j = 0;
+	while (j < filler->y_size)
+	{
+		while (i < filler->x_size)
+		{
+			ft_printf("%3d", filler->map[i][j]);
+			i++;
+		}
+		write(1, "\n", 1);
+		i = 0;
+		j++;
+	}
+}
+
+void	allocate_mem_for_map(t_filler *filler)
+{
+	int	i;
+
+	i = 0;
+	filler->map = (int **)xmalloc(sizeof(int *) * filler->x_size);
+	while (i < filler->x_size)
+	{
+		filler->map[i] = (int *)xmalloc(sizeof(int) * filler->y_size);
+		i++;
+	}
+}
+
+void	scan_grid_to_map(t_filler *filler)
+{
+
+}
+
+void	init_filler(t_filler *filler)
+{
+	allocate_mem_for_map(filler);
+	if (filler->player == 1)
+	{
+		scan_grid_to_map(filler);
+	}
+	print_map(filler);
 }
 
 int		main(void)
@@ -113,5 +172,7 @@ int		main(void)
 	t_filler	filler;
 
 	parser(&filler);
+	init_filler(&filler);
+	close(3);
 	return (0);
 }
