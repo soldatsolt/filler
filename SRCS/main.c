@@ -195,6 +195,8 @@ void	scan_piece(t_filler *filler)
 	{
 		get_next_line(0, &str);
 		ft_putendl_fd(str, fd);
+		if (!str)
+			exit(0); // TODO: Ещё не оч
 		while (str[j])
 		{
 			if (str[j] == '.')
@@ -312,6 +314,13 @@ void	free_map_and_piece(t_filler *filler)
 	free(filler->piece);
 }
 
+void	nowhere_to_put(t_filler *filler)
+{
+	ft_printf("0 0\n");
+	free_map_and_piece(filler);
+	exit(0);
+}
+
 void	place_to_put_piece(t_filler *filler)
 {
 	int		i;
@@ -337,6 +346,7 @@ void	place_to_put_piece(t_filler *filler)
 		i = 0;
 		j++;
 	}
+	nowhere_to_put(filler);
 }
 
 void	parse_dots(t_filler *filler, char *str)
@@ -396,17 +406,17 @@ void	init_filler(t_filler *filler)
 	filler->map[filler->enemy_start_x][filler->enemy_start_y] = -20;
 	place_to_put_piece(filler);
 	free_map_and_piece(filler);
-	ft_printf("%d %d\n", filler->x, filler->y);
-	// while(1)
-	// {
+	ft_printf("%d %d\n", filler->y, filler->x);
+	while(1)
+	{
 		allocate_mem_for_map(filler);
 		scan_grid_to_map(filler);
 		allocate_mem_for_piece(filler);
 		scan_piece(filler);
 		place_to_put_piece(filler);
-		ft_printf("%d %d\n", filler->x, filler->y);
+		ft_printf("%d %d\n", filler->y, filler->x);
 		free_map_and_piece(filler);
-	// }
+	}
 	// print_map(filler);
 	// print_piece(filler);
 }
