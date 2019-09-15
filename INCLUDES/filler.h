@@ -1,6 +1,15 @@
 #ifndef FILLER_H
 # define FILLER_H
 # include "../libft/libft.h"
+# include <sys/stat.h>
+# include <sys/xattr.h>
+# include <time.h>
+# include <dirent.h>
+# include <sys/types.h>
+# include <pwd.h>
+# include <uuid/uuid.h>
+# include <grp.h>
+# include <uuid/uuid.h>
 
 typedef	struct	s_filler
 {

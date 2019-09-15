@@ -1,5 +1,7 @@
 #include "filler.h"
 
+int fd;
+
 int		player_number(char *str)
 {
 	int		l;
@@ -110,10 +112,10 @@ void	parser(t_filler *filler)
 	char	*str;
 
 	str = NULL;
-	open("pusk", O_RDONLY);
 	bzero_filler(filler);
-	while (get_next_line(3, &str))
+	while (get_next_line(0, &str))
 	{
+		ft_putendl_fd(str, fd);
 		if (filler->player && !filler->dot_big && !filler->dot_small)
 			mark_dots_after_player(filler);
 		if (!(filler->player))
@@ -191,7 +193,8 @@ void	scan_piece(t_filler *filler)
 	str = NULL;
 	while (i < filler->piece_y_size)
 	{
-		get_next_line(3, &str);
+		get_next_line(0, &str);
+		ft_putendl_fd(str, fd);
 		while (str[j])
 		{
 			if (str[j] == '.')
@@ -359,13 +362,17 @@ void	scan_grid_to_map(t_filler *filler)
 	int		i;
 
 	i = 0;
-	while (i++ < 3)
+	while (i++ < 2)
 	{
-		get_next_line(3, &str);
-		ft_strdel(&str);
+		if (get_next_line(0, &str))
+		{
+			ft_putendl_fd(str, fd);
+			ft_strdel(&str);
+		}
 	}
-	while (get_next_line(3, &str))
+	while (get_next_line(0, &str))
 	{
+		ft_putendl_fd(str, fd);
 		if (ft_strchr_n(str, filler->dot_big) || ft_strchr_n(str, filler->dot_small) || \
 		ft_strchr_n(str, filler->enemy_dot_big) || ft_strchr_n(str, filler->enemy_dot_small))
 			parse_dots(filler, str);
@@ -395,7 +402,7 @@ void	init_filler(t_filler *filler)
 		scan_grid_to_map(filler);
 		allocate_mem_for_piece(filler);
 	// }
-	print_map(filler);
+	// print_map(filler);
 	// print_piece(filler);
 }
 
@@ -403,8 +410,9 @@ int		main(void)
 {
 	t_filler	filler;
 
+	fd = open("/Users/kmills/WOW42/algos/filler/VM", O_RDWR | O_CREAT, 0644);
 	parser(&filler);
 	init_filler(&filler);
-	close(3);
+	close(fd);
 	return (0);
 }
