@@ -6,7 +6,7 @@
 /*   By: kmills <kmills@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/17 15:43:10 by kmills            #+#    #+#             */
-/*   Updated: 2019/04/03 02:19:59 by kmills           ###   ########.fr       */
+/*   Updated: 2019/09/15 21:12:21 by kmills           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ static t_list	*ft_lsttnew(size_t content_size)
 		free(list);
 		return (NULL);
 	}
-	if (!(list->content = (void *)ft_memalloc(content_size)))
+	if (!(list->content = (void *)ft_memalloc(content_size + 1)))
 	{
 		free(list->content);
 		return (NULL);

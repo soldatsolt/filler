@@ -382,6 +382,7 @@ void	scan_grid_to_map(t_filler *filler)
 			ft_strdel(&str);
 			break ;
 		}
+		ft_strdel(&str);
 	}
 }
 
@@ -392,7 +393,7 @@ void	init_filler(t_filler *filler)
 	allocate_mem_for_piece(filler);
 	scan_piece(filler);
 	filler->map[filler->start_x][filler->start_y] = -10;
-	filler->map[filler->enemy_start_x][filler->enemy_start_x] = -20;
+	filler->map[filler->enemy_start_x][filler->enemy_start_y] = -20;
 	place_to_put_piece(filler);
 	free_map_and_piece(filler);
 	ft_printf("%d %d\n", filler->x, filler->y);
@@ -401,6 +402,10 @@ void	init_filler(t_filler *filler)
 		allocate_mem_for_map(filler);
 		scan_grid_to_map(filler);
 		allocate_mem_for_piece(filler);
+		scan_piece(filler);
+		place_to_put_piece(filler);
+		ft_printf("%d %d\n", filler->x, filler->y);
+		free_map_and_piece(filler);
 	// }
 	// print_map(filler);
 	// print_piece(filler);
