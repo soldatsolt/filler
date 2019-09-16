@@ -69,6 +69,8 @@ int		is_9_is_alone(t_filler *filler)
 		{
 			if (filler->map[i][j] == -9)
 				k++;
+			if (filler->map[i][j] == -19)
+				k += 10;
 			i++;
 		}
 		i = 0;
@@ -107,20 +109,22 @@ void	init_filler(t_filler *filler)
 	scan_piece(filler);
 	filler->map[filler->start_x][filler->start_y] = -10;
 	filler->map[filler->enemy_start_x][filler->enemy_start_y] = -20;
+	make_heat_map(filler);
 	place_to_put_piece(filler);
-	free_map_and_piece(filler);
+	// free_map_and_piece(filler);
 	ft_printf("%d %d\n", filler->y, filler->x);
-	while(1)
-	{
-		allocate_mem_for_map(filler);
-		scan_grid_to_map(filler);
-		allocate_mem_for_piece(filler);
-		scan_piece(filler);
-		place_to_put_piece(filler);
-		ft_printf("%d %d\n", filler->y, filler->x);
-		free_map_and_piece(filler);
-	}
-	// print_map(filler);
+	// while(1)
+	// {
+	// 	allocate_mem_for_map(filler);
+	// 	scan_grid_to_map(filler);
+	// 	make_heat_map(filler);
+	// 	allocate_mem_for_piece(filler);
+	// 	scan_piece(filler);
+	// 	place_to_put_piece(filler);
+	// 	ft_printf("%d %d\n", filler->y, filler->x);
+	// 	free_map_and_piece(filler);
+	// }
+	print_map(filler);
 	// print_piece(filler);
 }
 

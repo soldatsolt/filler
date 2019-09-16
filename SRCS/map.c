@@ -101,3 +101,66 @@ void	nowhere_to_put(t_filler *filler)
 	free_map_and_piece(filler);
 	exit(0);
 }
+
+void		increase_neighbours_to_n(t_filler *filler, int x, int y, int n)
+{
+	if (y < filler->y_size - 1 && filler->map[x][y + 1] != -10 && filler->map[x][y + 1] != -20)
+		filler->map[x][y + 1] = (filler->map[x][y + 1] < n) ? n : filler->map[x][y + 1];
+	if (y > 0 && filler->map[x][y - 1] != -10 && filler->map[x][y - 1] != -20)
+		filler->map[x][y - 1] = (filler->map[x][y - 1] < n) ? n : filler->map[x][y - 1];
+	if (x < filler->x_size - 1 && filler->map[x + 1][y] != -10 && filler->map[x + 1][y] != -20)
+		filler->map[x + 1][y] = (filler->map[x + 1][y] < n) ? n : filler->map[x + 1][y];
+	if (x > 0 && filler->map[x - 1][y] != -10 && filler->map[x - 1][y] != -20)
+		filler->map[x - 1][y] = (filler->map[x - 1][y] < n) ? n : filler->map[x - 1][y];
+	if (x > 0 && y > 0 && filler->map[x - 1][y - 1] != -10 && filler->map[x - 1][y - 1] != -20)
+		filler->map[x - 1][y - 1] = filler->map[x - 1][y - 1] < n ? n : filler->map[x - 1][y - 1];
+	if (x < filler->x_size - 1 && y < filler->y_size - 1 && filler->map[x + 1][y + 1] != -10 && filler->map[x + 1][y + 1] != -20)
+		filler->map[x + 1][y + 1] = filler->map[x + 1][y + 1] < n ? n : filler->map[x + 1][y + 1];
+	if (x > 0 && y < filler->y_size - 1 && filler->map[x - 1][y + 1] != -20 && filler->map[x - 1][y + 1] != -10)
+		filler->map[x - 1][y + 1] = filler->map[x - 1][y + 1] < n ? n : filler->map[x - 1][y + 1];
+	if (x < filler->x_size - 1 && y > 0 && filler->map[x + 1][y - 1] != -10 && filler->map[x + 1][y - 1] != -20)
+		filler->map[x + 1][y - 1] = filler->map[x + 1][y - 1] < n ? n : filler->map[x + 1][y - 1];
+}
+
+void	increase_near_enemy(t_filler *filler, int n, int to)
+{
+	int		i;
+	int		j;
+
+	i = 0;
+	j = 0;
+	while (j < filler->y_size)
+	{
+		while (i < filler->x_size)
+		{
+			if (filler->map[i][j] == n)
+				increase_neighbours_to_n(filler, i, j, to);
+			i++;
+		}
+		i = 0;
+		j++;
+	}
+}
+
+
+void	make_heat_map(t_filler *filler)
+{
+	int		i;
+	int		x;
+	int		y;
+	int		j;
+
+	j = 0;
+	i = 1;
+	x = 0;
+	y = 0;
+	while (i < (filler->x_size > filler->y_size ? filler->x_size : filler->y_size))
+	{
+		increase_near_enemy(filler, -20, i);
+		j = i + 1;
+		while (j--)
+			increase_near_enemy(filler, j, j - 1);
+		i++;
+	}
+	// increase_neighbours(filler, 2, 3, 2);
+}

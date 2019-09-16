@@ -55,5 +55,6 @@ void			bzero_filler(t_filler *filler);
 int				player_number(char *str);
 void			nowhere_to_put(t_filler *filler);
 void			parse_piece(t_filler *filler, char *str);
+void			make_heat_map(t_filler *filler);
 
 #endif
