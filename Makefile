@@ -1,6 +1,6 @@
 MAKE=make
 NAME=kmills.filler
-SRCS=SRCS/main.c
+SRCS=SRCS/main.c SRCS/piece.c SRCS/map.c SRCS/parcing.c
 OBJS=$(SRCS:SRCS%.c=OBJS%.o)
 HEADER=INCLUDES/filler.h
 INCLUDES=INCLUDES
@@ -21,13 +21,13 @@ override G +=
 all: $(NAME)
 
 $(NAME): $(OBJS) $(INCLUDES) $(LIBFT)
-	@gcc $(A_FILES) $(OBJS) -o $(NAME)
+	@gcc $(A_FILES) -I$(INCLUDES) $(OBJS) -o $(NAME)
 	@$(ECHO) "$(COMPILING_STRING)"
 
 $(LIBFT): $(LIBFTCILES)
 	@$(MAKE) -C libft
 
-$(OBJS): $(SRCS) $(HEADER)
+OBJS/%.o: SRCS/%.c $(HEADER)
 	@gcc -g -c $< -I$(INCLUDES) -I$(LIBFT) -o $@
 
 clean:
