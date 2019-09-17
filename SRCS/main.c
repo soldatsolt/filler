@@ -16,23 +16,27 @@ void	bzero_filler(t_filler *filler)
 	filler->enemy_dot_big = 0;
 }
 
-void	summ_map_and_piece(t_filler *filler, int x, int y)
+int		summ_map_and_piece(t_filler *filler, int x, int y)
 {
 	int		i;
 	int		j;
+	int		summ;
 
 	i = 0;
 	j = 0;
-	while (i < filler->piece_x_size)
+	summ = 0;
+	while (i < filler->real_piece_x_size)
 	{
-		while (j < filler->piece_y_size)
+		while (j < filler->real_piece_y_size)
 		{
 			filler->map[x + i][y + j] += filler->piece[i][j];
+			summ += filler->map[x + i][y + j];
 			j++;
 		}
 		j = 0;
 		i++;
 	}
+	return (summ);
 }
 
 void	minus_map_and_piece(t_filler *filler, int x, int y)
@@ -42,9 +46,9 @@ void	minus_map_and_piece(t_filler *filler, int x, int y)
 
 	i = 0;
 	j = 0;
-	while (i < filler->piece_x_size)
+	while (i < filler->real_piece_x_size)
 	{
-		while (j < filler->piece_y_size)
+		while (j < filler->real_piece_y_size)
 		{
 			filler->map[x + i][y + j] -= filler->piece[i][j];
 			j++;
@@ -54,7 +58,7 @@ void	minus_map_and_piece(t_filler *filler, int x, int y)
 	}
 }
 
-int		is_9_is_alone(t_filler *filler)
+int		is_9_is_alone(t_filler *filler, int *summ)
 {
 	int	i;
 	int	j;
@@ -110,21 +114,23 @@ void	init_filler(t_filler *filler)
 	filler->map[filler->start_x][filler->start_y] = -10;
 	filler->map[filler->enemy_start_x][filler->enemy_start_y] = -20;
 	make_heat_map(filler);
+	make_real_piece_size(filler);
 	place_to_put_piece(filler);
-	// free_map_and_piece(filler);
+	free_map_and_piece(filler);
 	ft_printf("%d %d\n", filler->y, filler->x);
-	// while(1)
-	// {
-	// 	allocate_mem_for_map(filler);
-	// 	scan_grid_to_map(filler);
-	// 	make_heat_map(filler);
-	// 	allocate_mem_for_piece(filler);
-	// 	scan_piece(filler);
-	// 	place_to_put_piece(filler);
-	// 	ft_printf("%d %d\n", filler->y, filler->x);
-	// 	free_map_and_piece(filler);
-	// }
-	print_map(filler);
+	while(1)
+	{
+		allocate_mem_for_map(filler);
+		scan_grid_to_map(filler);
+		make_heat_map(filler);
+		allocate_mem_for_piece(filler);
+		scan_piece(filler);
+		make_real_piece_size(filler);
+		place_to_put_piece(filler);
+		ft_printf("%d %d\n", filler->y, filler->x);
+		free_map_and_piece(filler);
+	}
+	// print_map(filler);
 	// print_piece(filler);
 }
 

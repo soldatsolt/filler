@@ -29,6 +29,35 @@ void	scan_piece(t_filler *filler)
 	}
 }
 
+void			make_real_piece_size(t_filler *filler)
+{
+	int	i;
+	int	j;
+	int	mi;
+	int	mj;
+
+	i = 0;
+	j = 0;
+	mi = 0;
+	mj = 0;
+	while (i < filler->piece_x_size)
+	{
+		while (j < filler->piece_y_size)
+		{
+			if (filler->piece[i][j] == 1 && mi < i + 1)
+				mi = i + 1;
+			if (filler->piece[i][j] == 1 && mj < j + 1)
+				mj = j + 1;
+			j++;
+		}
+		i++;
+		j = 0;
+	}
+	// ft_printf("%d %d\n", mi, mj);
+	filler->real_piece_x_size = mi;
+	filler->real_piece_y_size = mj;
+}
+
 void	allocate_mem_for_piece(t_filler *filler)
 {
 	int	i;
@@ -75,20 +104,22 @@ void	place_to_put_piece(t_filler *filler)
 {
 	int		i;
 	int		j;
+	int		summ;
+	int		i_summ;
 
+	summ = -100;
 	i = 0;
 	j = 0;
 	while (j + filler->piece_y_size - 1 < filler->y_size)
 	{
 		while (i + filler->piece_x_size - 1 < filler->x_size)
 		{
-			summ_map_and_piece(filler, i, j);
-			if (is_9_is_alone(filler))
+			i_summ = summ_map_and_piece(filler, i, j);
+			if (is_9_is_alone(filler, &summ) && summ < i_summ)
 			{
+				summ = i_summ;
 				filler->x = i;
 				filler->y = j;
-				minus_map_and_piece(filler, i ,j);
-				return;
 			}
 			minus_map_and_piece(filler, i ,j);
 			i++;
@@ -96,5 +127,6 @@ void	place_to_put_piece(t_filler *filler)
 		i = 0;
 		j++;
 	}
-	nowhere_to_put(filler);
+	if (summ == -100)
+		nowhere_to_put(filler);
 }

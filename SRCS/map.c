@@ -142,7 +142,6 @@ void	increase_near_enemy(t_filler *filler, int n, int to)
 	}
 }
 
-
 void	make_heat_map(t_filler *filler)
 {
 	int		i;
