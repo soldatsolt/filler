@@ -68,22 +68,15 @@ void	allocate_mem_for_map(t_filler *filler)
 void	scan_grid_to_map(t_filler *filler)
 {
 	char	*str;
-	int		i;
 
-	i = 0;
-	while (i++ < 2)
-	{
-		if (get_next_line(0, &str))
-		{
-			find_map_size(filler, str);
-			ft_putendl_fd(str, fd);
-			ft_strdel(&str);
-		}
-	}
-	allocate_mem_for_map(filler);
 	while (get_next_line(0, &str))
 	{
-		ft_putendl_fd(str, fd);
+		if (str[0] == 'P' && str[1] == 'l')
+		{
+			find_map_size(filler, str);
+			allocate_mem_for_map(filler);
+		}
+		// ft_putendl_fd(str, fd);
 		if (ft_strchr_n(str, filler->dot_big) || ft_strchr_n(str, filler->dot_small) || \
 		ft_strchr_n(str, filler->enemy_dot_big) || ft_strchr_n(str, filler->enemy_dot_small))
 			parse_dots(filler, str);
@@ -93,7 +86,7 @@ void	scan_grid_to_map(t_filler *filler)
 			ft_strdel(&str);
 			break ;
 		}
-		ft_strdel(&str);
+		free(str);
 	}
 }
 

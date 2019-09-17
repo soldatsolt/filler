@@ -55,7 +55,7 @@ void	parser(t_filler *filler)
 	str = NULL;
 	bzero_filler(filler);
 	get_next_line(0, &str);
-	ft_putendl_fd(str, fd);
+	// ft_putendl_fd(str, fd);
 	filler->player = player_number(str);
 	ft_strdel(&str);
 }

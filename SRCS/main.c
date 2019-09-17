@@ -115,6 +115,8 @@ void	init_filler(t_filler *filler)
 	while(1)
 	{
 		scan_grid_to_map(filler);
+		if (!filler->map)
+			break;
 		make_heat_map(filler);
 		allocate_mem_for_piece(filler);
 		scan_piece(filler);

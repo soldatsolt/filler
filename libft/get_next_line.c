@@ -6,7 +6,7 @@
 /*   By: kmills <kmills@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/17 15:43:10 by kmills            #+#    #+#             */
-/*   Updated: 2019/09/17 21:12:55 by kmills           ###   ########.fr       */
+/*   Updated: 2019/09/17 22:17:22 by kmills           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,15 +86,15 @@ int				get_next_line(const int fd, char **line)
 	if (!line || fd < 0 || (read(fd, NULL, 0) < 0))
 		return (-1);
 	if (!(sl))
-		sl = ft_lsttnew((size_t)fd);
+		sl = ft_lsttnew((size_t)(fd + 1));
 	tmp = sl;
-	if (tmp->content_size != (size_t)fd)
-		while (!(tmp->content_size == (size_t)fd) || (tmp->next))
-			if (!(tmp = tmp->next) || tmp->content_size == (size_t)fd)
+	if (tmp->content_size != (size_t)(fd + 1))
+		while (!(tmp->content_size == (size_t)(fd + 1)) || (tmp->next))
+			if (!(tmp = tmp->next) || tmp->content_size == (size_t)(fd + 1))
 				break ;
 	if (!tmp)
 	{
-		tmp = ft_lsttnew((size_t)fd);
+		tmp = ft_lsttnew((size_t)(fd + 1));
 		ft_lstadd(&sl, tmp);
 	}
 	if (!ggnl(fd, line, tmp))

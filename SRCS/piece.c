@@ -8,11 +8,9 @@ void	scan_piece(t_filler *filler)
 
 	j = 0;
 	i = 0;
-	str = NULL;
-	while (i < filler->piece_y_size)
+	while (i < filler->piece_y_size && get_next_line(0, &str))
 	{
-		get_next_line(0, &str);
-		ft_putendl_fd(str, fd);
+		// ft_putendl_fd(str, fd);
 		if (!str)
 		{
 			free_map_and_piece(filler);
@@ -30,6 +28,8 @@ void	scan_piece(t_filler *filler)
 		j = 0;
 		ft_strdel(&str);
 	}
+	if (str)
+		ft_strdel(&str);
 }
 
 void			make_real_piece_size(t_filler *filler)
