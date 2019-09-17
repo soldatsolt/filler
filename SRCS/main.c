@@ -107,12 +107,10 @@ void	free_map_and_piece(t_filler *filler)
 
 void	init_filler(t_filler *filler)
 {
-	allocate_mem_for_map(filler);// тут у нас указатель файла стоит на 
-	// начале первой фигуры для игрока 1
+	mark_dots_after_player(filler);
+	scan_grid_to_map(filler);
 	allocate_mem_for_piece(filler);
 	scan_piece(filler);
-	filler->map[filler->start_x][filler->start_y] = -10;
-	filler->map[filler->enemy_start_x][filler->enemy_start_y] = -20;
 	make_heat_map(filler);
 	make_real_piece_size(filler);
 	place_to_put_piece(filler);
@@ -120,7 +118,6 @@ void	init_filler(t_filler *filler)
 	ft_printf("%d %d\n", filler->y, filler->x);
 	while(1)
 	{
-		allocate_mem_for_map(filler);
 		scan_grid_to_map(filler);
 		make_heat_map(filler);
 		allocate_mem_for_piece(filler);

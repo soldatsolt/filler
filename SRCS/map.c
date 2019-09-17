@@ -75,10 +75,12 @@ void	scan_grid_to_map(t_filler *filler)
 	{
 		if (get_next_line(0, &str))
 		{
+			find_map_size(filler, str);
 			ft_putendl_fd(str, fd);
 			ft_strdel(&str);
 		}
 	}
+	allocate_mem_for_map(filler);
 	while (get_next_line(0, &str))
 	{
 		ft_putendl_fd(str, fd);

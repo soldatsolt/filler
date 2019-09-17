@@ -54,27 +54,10 @@ void	parser(t_filler *filler)
 
 	str = NULL;
 	bzero_filler(filler);
-	while (get_next_line(0, &str))
-	{
-		ft_putendl_fd(str, fd);
-		if (filler->player && !filler->dot_big && !filler->dot_small)
-			mark_dots_after_player(filler);
-		if (!(filler->player))
-			filler->player = player_number(str);
-		if (!(filler->y_size))
-			find_map_size(filler, str);
-		if (filler->start_y == -1 || filler->enemy_start_y == -1)
-			find_start_point(filler, str);
-		if ((filler->enemy_start_y != -1) && (filler->start_y != -1) && \
-		!(ft_strchr_n(str, '.')))
-			break ;
-		ft_strdel(&str);
-	}
-	if (str)
-	{
-		parse_piece(filler, str);
-		ft_strdel(&str);
-	}
+	get_next_line(0, &str);
+	ft_putendl_fd(str, fd);
+	filler->player = player_number(str);
+	ft_strdel(&str);
 }
 
 void	parse_dots(t_filler *filler, char *str)
