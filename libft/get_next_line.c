@@ -6,11 +6,16 @@
 /*   By: kmills <kmills@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/17 15:43:10 by kmills            #+#    #+#             */
-/*   Updated: 2019/09/15 21:12:21 by kmills           ###   ########.fr       */
+/*   Updated: 2019/09/17 21:12:55 by kmills           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
+
+static void		free_list(t_list *list)
+{
+	free(list);
+}
 
 static t_list	*ft_lsttnew(size_t content_size)
 {
@@ -21,7 +26,7 @@ static t_list	*ft_lsttnew(size_t content_size)
 		free(list);
 		return (NULL);
 	}
-	if (!(list->content = (void *)ft_memalloc(content_size + 1)))
+	if (!(list->content = (void *)ft_memalloc(content_size)))
 	{
 		free(list->content);
 		return (NULL);
@@ -49,8 +54,8 @@ static int		gnl(char **line, t_list *tmp)
 	else if (ft_strlen(tmp->content) > 0)
 	{
 		*line = ft_strdup(tmp->content);
-		free(tmpbuf);
-		tmp->content = ft_strnew(0);
+		free(tmp->content);
+		tmp->content = NULL;
 		return (1);
 	}
 	return (0);
@@ -92,5 +97,10 @@ int				get_next_line(const int fd, char **line)
 		tmp = ft_lsttnew((size_t)fd);
 		ft_lstadd(&sl, tmp);
 	}
-	return (ggnl(fd, line, tmp));
+	if (!ggnl(fd, line, tmp))
+	{
+		free_list(tmp);
+		return (0);
+	}
+	return (1);
 }

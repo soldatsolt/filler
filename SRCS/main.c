@@ -58,7 +58,7 @@ void	minus_map_and_piece(t_filler *filler, int x, int y)
 	}
 }
 
-int		is_9_is_alone(t_filler *filler, int *summ)
+int		is_9_is_alone(t_filler *filler)
 {
 	int	i;
 	int	j;
@@ -93,29 +93,25 @@ void	free_map_and_piece(t_filler *filler)
 	while (i < filler->x_size)
 	{
 		free(filler->map[i]);
+		filler->map[i] = NULL;
 		i++;
 	}
 	i = 0;
 	while (i < filler->piece_x_size)
 	{
 		free(filler->piece[i]);
+		filler->piece[i] = NULL;
 		i++;
 	}
 	free(filler->map);
+	filler->map = NULL;
 	free(filler->piece);
+	filler->piece = NULL;
 }
 
 void	init_filler(t_filler *filler)
 {
 	mark_dots_after_player(filler);
-	scan_grid_to_map(filler);
-	allocate_mem_for_piece(filler);
-	scan_piece(filler);
-	make_heat_map(filler);
-	make_real_piece_size(filler);
-	place_to_put_piece(filler);
-	free_map_and_piece(filler);
-	ft_printf("%d %d\n", filler->y, filler->x);
 	while(1)
 	{
 		scan_grid_to_map(filler);

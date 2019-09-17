@@ -28,7 +28,7 @@ $(LIBFT): $(LIBFTCILES)
 	@$(MAKE) -C libft
 
 OBJS/%.o: SRCS/%.c $(HEADER)
-	@gcc -g -c $< -I$(INCLUDES) -I$(LIBFT) -o $@
+	@gcc -g -c $(FLAGS) $< -I$(INCLUDES) -I$(LIBFT) -o $@
 
 clean:
 	@rm -f $(OBJS)

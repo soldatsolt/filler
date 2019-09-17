@@ -14,7 +14,10 @@ void	scan_piece(t_filler *filler)
 		get_next_line(0, &str);
 		ft_putendl_fd(str, fd);
 		if (!str)
-			exit(0); // TODO: Ещё не оч
+		{
+			free_map_and_piece(filler);
+			exit(0);
+		}
 		while (str[j])
 		{
 			if (str[j] == '.')
@@ -53,7 +56,6 @@ void			make_real_piece_size(t_filler *filler)
 		i++;
 		j = 0;
 	}
-	// ft_printf("%d %d\n", mi, mj);
 	filler->real_piece_x_size = mi;
 	filler->real_piece_y_size = mj;
 }
@@ -115,7 +117,7 @@ void	place_to_put_piece(t_filler *filler)
 		while (i + filler->piece_x_size - 1 < filler->x_size)
 		{
 			i_summ = summ_map_and_piece(filler, i, j);
-			if (is_9_is_alone(filler, &summ) && summ < i_summ)
+			if (is_9_is_alone(filler) && summ < i_summ)
 			{
 				summ = i_summ;
 				filler->x = i;

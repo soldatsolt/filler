@@ -41,7 +41,7 @@ void			scan_grid_to_map(t_filler *filler);
 void			parse_dots(t_filler *filler, char *str);
 void			place_to_put_piece(t_filler *filler);
 void			free_map_and_piece(t_filler *filler);
-int				is_9_is_alone(t_filler *filler, int *summ);
+int				is_9_is_alone(t_filler *filler);
 void			minus_map_and_piece(t_filler *filler, int x, int y);
 int				summ_map_and_piece(t_filler *filler, int x, int y);
 void			print_piece(t_filler *filler);
