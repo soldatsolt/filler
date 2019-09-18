@@ -36,7 +36,7 @@ typedef	struct	s_filler
 	int			**piece;
 }				t_filler;
 
-void			init_filler(t_filler *filler);
+void			loop_filler(t_filler *filler);
 void			scan_grid_to_map(t_filler *filler);
 void			parse_dots(t_filler *filler, char *str);
 void			place_to_put_piece(t_filler *filler);

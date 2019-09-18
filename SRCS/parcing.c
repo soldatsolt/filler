@@ -7,6 +7,11 @@ int		player_number(char *str)
 
 	s = NULL;
 	l = (int)ft_strlen(str);
+	// if (ft_strncmp(str, "$$$ exec p1 : [", 15))
+	// {
+	// 	ft_putendl_fd("WRONG HEADER", 2); TODO: НА ВИРТУАЛКЕ СЧИТАЕТ НЕНОРМАЛЬНЫМ ХЭДЭР СТАНДАРТНЫЙ(((
+	// 	exit(0);
+	// }
 	if (l < 15)
 		return (0);
 	s = ft_strdup(str);

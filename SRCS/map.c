@@ -65,6 +65,28 @@ void	allocate_mem_for_map(t_filler *filler)
 	}
 }
 
+void	free_only_map(t_filler *filler)
+{
+	int	i;
+
+	i = 0;
+	while (i < filler->x_size)
+	{
+		free(filler->map[i]);
+		filler->map[i] = NULL;
+		i++;
+	}
+	free(filler->map);
+	filler->map = NULL;
+}
+
+void	bad_map(t_filler *filler)
+{
+	free_only_map(filler);
+	ft_putendl_fd("BAD MAP", 2);
+	exit(0);
+}
+
 void	scan_grid_to_map(t_filler *filler)
 {
 	char	*str;
@@ -76,7 +98,10 @@ void	scan_grid_to_map(t_filler *filler)
 			find_map_size(filler, str);
 			allocate_mem_for_map(filler);
 		}
-		// ft_putendl_fd(str, fd);
+		if (ft_isdigit(str[0]) && (int)ft_strlen(str) != 4 + filler->x_size)
+			bad_map(filler);
+		if (ft_isdigit(str[0]) && (ft_atoi(str) > filler->y_size - 1))
+			bad_map(filler);
 		if (ft_strchr_n(str, filler->dot_big) || ft_strchr_n(str, filler->dot_small) || \
 		ft_strchr_n(str, filler->enemy_dot_big) || ft_strchr_n(str, filler->enemy_dot_small))
 			parse_dots(filler, str);

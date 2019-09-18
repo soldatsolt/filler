@@ -109,7 +109,7 @@ void	free_map_and_piece(t_filler *filler)
 	filler->piece = NULL;
 }
 
-void	init_filler(t_filler *filler)
+void	loop_filler(t_filler *filler)
 {
 	mark_dots_after_player(filler);
 	while(1)
@@ -135,7 +135,7 @@ int		main(void)
 
 	fd = open("/Users/kmills/WOW42/algos/filler/VM", O_RDWR | O_CREAT, 0644);
 	parser(&filler);
-	init_filler(&filler);
+	loop_filler(&filler);
 	close(fd);
 	return (0);
 }
