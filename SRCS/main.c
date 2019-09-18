@@ -112,21 +112,19 @@ void	free_map_and_piece(t_filler *filler)
 void	loop_filler(t_filler *filler)
 {
 	mark_dots_after_player(filler);
-	while(1)
+	while (1)
 	{
 		scan_grid_to_map(filler);
 		if (!filler->map)
-			break;
+			break ;
 		make_heat_map(filler);
 		allocate_mem_for_piece(filler);
 		scan_piece(filler);
 		make_real_piece_size(filler);
-		place_to_put_piece(filler);
+		place_to_put_piece(filler, 0, 0);
 		ft_printf("%d %d\n", filler->y, filler->x);
 		free_map_and_piece(filler);
 	}
-	// print_map(filler);
-	// print_piece(filler);
 }
 
 int		main(void)

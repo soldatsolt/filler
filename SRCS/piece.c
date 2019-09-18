@@ -12,7 +12,6 @@ void	scan_piece(t_filler *filler)
 	gnl = 0;
 	while (i < filler->piece_y_size && (gnl = get_next_line(0, &str)))
 	{
-		// ft_putendl_fd(str, fd);
 		while (str[j])
 		{
 			if (str[j] == '.')
@@ -24,16 +23,13 @@ void	scan_piece(t_filler *filler)
 		i++;
 		j = 0;
 		if (gnl == -1 || gnl == 0)
-		{
-			// free_map_and_piece(filler);
 			exit(0);
-		}
 		free(str);
 		str = NULL;
 	}
 }
 
-void			make_real_piece_size(t_filler *filler)
+void	make_real_piece_size(t_filler *filler)
 {
 	int	i;
 	int	j;
@@ -103,16 +99,12 @@ void	print_piece(t_filler *filler)
 	}
 }
 
-void	place_to_put_piece(t_filler *filler)
+void	place_to_put_piece(t_filler *filler, int i, int j)
 {
-	int		i;
-	int		j;
 	int		summ;
 	int		i_summ;
 
 	summ = -100;
-	i = 0;
-	j = 0;
 	while (j + filler->piece_y_size - 1 < filler->y_size)
 	{
 		while (i + filler->piece_x_size - 1 < filler->x_size)
@@ -124,7 +116,7 @@ void	place_to_put_piece(t_filler *filler)
 				filler->x = i;
 				filler->y = j;
 			}
-			minus_map_and_piece(filler, i ,j);
+			minus_map_and_piece(filler, i, j);
 			i++;
 		}
 		i = 0;

@@ -7,11 +7,11 @@ int		player_number(char *str)
 
 	s = NULL;
 	l = (int)ft_strlen(str);
-	// if (ft_strncmp(str, "$$$ exec p1 : [", 15))
-	// {
-	// 	ft_putendl_fd("WRONG HEADER", 2); TODO: НА ВИРТУАЛКЕ СЧИТАЕТ НЕНОРМАЛЬНЫМ ХЭДЭР СТАНДАРТНЫЙ(((
-	// 	exit(0);
-	// }
+	if (ft_strncmp(str, "$$$ exec p", 10))
+	{
+		ft_putendl_fd("WRONG HEADER", 2);
+		exit(0);
+	}
 	if (l < 15)
 		return (0);
 	s = ft_strdup(str);
@@ -60,7 +60,6 @@ void	parser(t_filler *filler)
 	str = NULL;
 	bzero_filler(filler);
 	get_next_line(0, &str);
-	// ft_putendl_fd(str, fd);
 	filler->player = player_number(str);
 	ft_strdel(&str);
 }
@@ -76,7 +75,8 @@ void	parse_dots(t_filler *filler, char *str)
 	{
 		if (str[i + 4] == filler->dot_small || str[i + 4] == filler->dot_big)
 			filler->map[i][j] = -10;
-		if (str[i + 4] == filler->enemy_dot_small || str[i + 4] == filler->enemy_dot_big)
+		if (str[i + 4] == filler->enemy_dot_small || \
+		str[i + 4] == filler->enemy_dot_big)
 			filler->map[i][j] = -20;
 		i++;
 	}

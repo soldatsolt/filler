@@ -87,6 +87,14 @@ void	bad_map(t_filler *filler)
 	exit(0);
 }
 
+void	check_for_bad_map_in_scaning(t_filler *filler, char *str)
+{
+	if (ft_isdigit(str[0]) && (int)ft_strlen(str) != 4 + filler->x_size)
+		bad_map(filler);
+	if (ft_isdigit(str[0]) && (ft_atoi(str) > filler->y_size - 1))
+		bad_map(filler);
+}
+
 void	scan_grid_to_map(t_filler *filler)
 {
 	char	*str;
@@ -98,12 +106,10 @@ void	scan_grid_to_map(t_filler *filler)
 			find_map_size(filler, str);
 			allocate_mem_for_map(filler);
 		}
-		if (ft_isdigit(str[0]) && (int)ft_strlen(str) != 4 + filler->x_size)
-			bad_map(filler);
-		if (ft_isdigit(str[0]) && (ft_atoi(str) > filler->y_size - 1))
-			bad_map(filler);
-		if (ft_strchr_n(str, filler->dot_big) || ft_strchr_n(str, filler->dot_small) || \
-		ft_strchr_n(str, filler->enemy_dot_big) || ft_strchr_n(str, filler->enemy_dot_small))
+		check_for_bad_map_in_scaning(filler, str);
+		if (ft_strchr_n(str, filler->dot_big) || ft_strchr_n(str, \
+		filler->dot_small) || ft_strchr_n(str, filler->enemy_dot_big) || \
+		ft_strchr_n(str, filler->enemy_dot_small))
 			parse_dots(filler, str);
 		if (str[0] == 'P' && str[1] == 'i')
 		{
@@ -114,7 +120,7 @@ void	scan_grid_to_map(t_filler *filler)
 		ft_strdel(&str);
 	}
 	if (str)
-        free(str);
+		free(str);
 }
 
 void	nowhere_to_put(t_filler *filler)
@@ -124,24 +130,43 @@ void	nowhere_to_put(t_filler *filler)
 	exit(0);
 }
 
-void		increase_neighbours_to_n(t_filler *filler, int x, int y, int n)
+void	increase_neighbours_to_n1(t_filler *filler, int x, int y, int n)
 {
-	if (y < filler->y_size - 1 && filler->map[x][y + 1] != -10 && filler->map[x][y + 1] != -20)
-		filler->map[x][y + 1] = (filler->map[x][y + 1] < n) ? n : filler->map[x][y + 1];
+	if (x > 0 && y > 0 && filler->map[x - 1][y - 1] != -10 && \
+	filler->map[x - 1][y - 1] != -20)
+		filler->map[x - 1][y - 1] = filler->map[x - 1][y - 1] < n ? \
+		n : filler->map[x - 1][y - 1];
+	if (x < filler->x_size - 1 && y < filler->y_size - 1 && \
+	filler->map[x + 1][y + 1] != -10 && filler->map[x + 1][y + 1] != -20)
+		filler->map[x + 1][y + 1] = filler->map[x + 1][y + 1] < n ? n : \
+		filler->map[x + 1][y + 1];
+	if (x > 0 && y < filler->y_size - 1 && filler->map[x - 1][y + 1] != -20 && \
+	filler->map[x - 1][y + 1] != -10)
+		filler->map[x - 1][y + 1] = filler->map[x - 1][y + 1] < n ? n : \
+		filler->map[x - 1][y + 1];
+	if (x < filler->x_size - 1 && y > 0 && filler->map[x + 1][y - 1] != -10 && \
+	filler->map[x + 1][y - 1] != -20)
+		filler->map[x + 1][y - 1] = filler->map[x + 1][y - 1] < n ? n : \
+		filler->map[x + 1][y - 1];
+}
+
+void	increase_neighbours_to_n(t_filler *filler, int x, int y, int n)
+{
+	if (y < filler->y_size - 1 && filler->map[x][y + 1] != -10 && \
+	filler->map[x][y + 1] != -20)
+		filler->map[x][y + 1] = (filler->map[x][y + 1] < n) ? n : \
+		filler->map[x][y + 1];
 	if (y > 0 && filler->map[x][y - 1] != -10 && filler->map[x][y - 1] != -20)
-		filler->map[x][y - 1] = (filler->map[x][y - 1] < n) ? n : filler->map[x][y - 1];
-	if (x < filler->x_size - 1 && filler->map[x + 1][y] != -10 && filler->map[x + 1][y] != -20)
-		filler->map[x + 1][y] = (filler->map[x + 1][y] < n) ? n : filler->map[x + 1][y];
+		filler->map[x][y - 1] = (filler->map[x][y - 1] < n) ? n : \
+		filler->map[x][y - 1];
+	if (x < filler->x_size - 1 && filler->map[x + 1][y] != -10 && \
+	filler->map[x + 1][y] != -20)
+		filler->map[x + 1][y] = (filler->map[x + 1][y] < n) ? n : \
+		filler->map[x + 1][y];
 	if (x > 0 && filler->map[x - 1][y] != -10 && filler->map[x - 1][y] != -20)
-		filler->map[x - 1][y] = (filler->map[x - 1][y] < n) ? n : filler->map[x - 1][y];
-	if (x > 0 && y > 0 && filler->map[x - 1][y - 1] != -10 && filler->map[x - 1][y - 1] != -20)
-		filler->map[x - 1][y - 1] = filler->map[x - 1][y - 1] < n ? n : filler->map[x - 1][y - 1];
-	if (x < filler->x_size - 1 && y < filler->y_size - 1 && filler->map[x + 1][y + 1] != -10 && filler->map[x + 1][y + 1] != -20)
-		filler->map[x + 1][y + 1] = filler->map[x + 1][y + 1] < n ? n : filler->map[x + 1][y + 1];
-	if (x > 0 && y < filler->y_size - 1 && filler->map[x - 1][y + 1] != -20 && filler->map[x - 1][y + 1] != -10)
-		filler->map[x - 1][y + 1] = filler->map[x - 1][y + 1] < n ? n : filler->map[x - 1][y + 1];
-	if (x < filler->x_size - 1 && y > 0 && filler->map[x + 1][y - 1] != -10 && filler->map[x + 1][y - 1] != -20)
-		filler->map[x + 1][y - 1] = filler->map[x + 1][y - 1] < n ? n : filler->map[x + 1][y - 1];
+		filler->map[x - 1][y] = (filler->map[x - 1][y] < n) ? n : \
+		filler->map[x - 1][y];
+	increase_neighbours_to_n1(filler, x, y, n);
 }
 
 void	increase_near_enemy(t_filler *filler, int n, int to)
@@ -175,7 +200,8 @@ void	make_heat_map(t_filler *filler)
 	i = 1;
 	x = 0;
 	y = 0;
-	while (i < (filler->x_size > filler->y_size ? filler->x_size : filler->y_size))
+	while (i < (filler->x_size > filler->y_size ? \
+	filler->x_size : filler->y_size))
 	{
 		increase_near_enemy(filler, -20, i);
 		j = i + 1;
@@ -183,5 +209,4 @@ void	make_heat_map(t_filler *filler)
 			increase_near_enemy(filler, j, j - 1);
 		i++;
 	}
-	// increase_neighbours(filler, 2, 3, 2);
 }
