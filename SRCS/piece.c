@@ -5,17 +5,14 @@ void	scan_piece(t_filler *filler)
 	int		i;
 	char	*str;
 	int		j;
+	int		gnl;
 
 	j = 0;
 	i = 0;
-	while (i < filler->piece_y_size && get_next_line(0, &str))
+	gnl = 0;
+	while (i < filler->piece_y_size && (gnl = get_next_line(0, &str)))
 	{
 		// ft_putendl_fd(str, fd);
-		if (!str)
-		{
-			free_map_and_piece(filler);
-			exit(0);
-		}
 		while (str[j])
 		{
 			if (str[j] == '.')
@@ -26,10 +23,14 @@ void	scan_piece(t_filler *filler)
 		}
 		i++;
 		j = 0;
-		ft_strdel(&str);
+		if (gnl == -1 || gnl == 0)
+		{
+			// free_map_and_piece(filler);
+			exit(0);
+		}
+		free(str);
+		str = NULL;
 	}
-	if (str)
-		ft_strdel(&str);
 }
 
 void			make_real_piece_size(t_filler *filler)

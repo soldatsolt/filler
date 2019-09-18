@@ -86,8 +86,10 @@ void	scan_grid_to_map(t_filler *filler)
 			ft_strdel(&str);
 			break ;
 		}
-		free(str);
+		ft_strdel(&str);
 	}
+	if (str)
+        free(str);
 }
 
 void	nowhere_to_put(t_filler *filler)

@@ -6,101 +6,80 @@
 /*   By: kmills <kmills@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/17 15:43:10 by kmills            #+#    #+#             */
-/*   Updated: 2019/09/17 22:17:22 by kmills           ###   ########.fr       */
+/*   Updated: 2019/09/18 14:24:16 by kmills           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-static void		free_list(t_list *list)
+#include "libft.h"
+
+static	int	counter(char *str)
 {
-	free(list);
+	int	i;
+
+	i = 0;
+	while (str[i] != '\n' && str[i] != '\0')
+		i++;
+	return (i);
 }
 
-static t_list	*ft_lsttnew(size_t content_size)
+static int	merger(char **store, char *note)
 {
-	t_list	*list;
+	char *temporary;
 
-	if (!(list = (t_list *)ft_memalloc(sizeof(t_list))))
-	{
-		free(list);
-		return (NULL);
-	}
-	if (!(list->content = (void *)ft_memalloc(content_size)))
-	{
-		free(list->content);
-		return (NULL);
-	}
-	list->content_size = content_size;
-	list->next = NULL;
-	return (list);
-}
-
-static int		gnl(char **line, t_list *tmp)
-{
-	char		*qwe;
-	char		*tmpbuf;
-
-	tmpbuf = tmp->content;
-	qwe = ft_strchr(tmp->content, 10);
-	if (qwe)
-	{
-		qwe[0] = '\0';
-		*line = ft_strdup(tmp->content);
-		tmp->content = ft_strdup(&qwe[1]);
-		free(tmpbuf);
-		return (1);
-	}
-	else if (ft_strlen(tmp->content) > 0)
-	{
-		*line = ft_strdup(tmp->content);
-		free(tmp->content);
-		tmp->content = NULL;
-		return (1);
-	}
+	temporary = *store;
+	*store = ft_strjoin(*store, note);
+	free(temporary);
 	return (0);
 }
 
-static int		ggnl(const int fd, char **line, t_list *tmp)
+static int	updating(char **store)
 {
-	int				r;
-	char			str[BUFF_SIZE + 1];
+	char *temporary;
 
-	while (!(ft_strchr(tmp->content, 10)))
-	{
-		if ((r = read(fd, str, BUFF_SIZE)) == -1)
-			return (-1);
-		str[r] = '\0';
-		if (r == 0)
-			break ;
-		tmp->content = ft_strrejoin(tmp->content, str);
-	}
-	return (gnl(line, tmp));
+	temporary = *store;
+	*store = ft_strsub(*store, counter(*store) + 1,
+			ft_strlen(*store) - counter(*store));
+	free(temporary);
+	return (0);
 }
 
-int				get_next_line(const int fd, char **line)
+static	int	to_delete(char **arr)
 {
-	static t_list	*sl;
-	t_list			*tmp;
-
-	if (!line || fd < 0 || (read(fd, NULL, 0) < 0))
-		return (-1);
-	if (!(sl))
-		sl = ft_lsttnew((size_t)(fd + 1));
-	tmp = sl;
-	if (tmp->content_size != (size_t)(fd + 1))
-		while (!(tmp->content_size == (size_t)(fd + 1)) || (tmp->next))
-			if (!(tmp = tmp->next) || tmp->content_size == (size_t)(fd + 1))
-				break ;
-	if (!tmp)
+	if (*arr[0] == '\0')
 	{
-		tmp = ft_lsttnew((size_t)(fd + 1));
-		ft_lstadd(&sl, tmp);
-	}
-	if (!ggnl(fd, line, tmp))
-	{
-		free_list(tmp);
+		free(*arr);
+		*arr = NULL;
 		return (0);
 	}
+	return (1);
+}
+
+int			get_next_line(const int fd, char **line)
+{
+	static char	*store[10000];
+	char		*note;
+	int			ret;
+
+	if (!line || fd < 0 ||
+		!(note = (char *)malloc(BUFF_SIZE + 1)) || read(fd, note, 0))
+		return (-1);
+	if (!store[fd])
+		store[fd] = ft_strnew(0);
+	while ((ft_strchr(store[fd], '\n') == NULL) &&
+		(ret = read(fd, note, BUFF_SIZE)) > 0)
+	{
+		note[ret] = '\0';
+		merger(&store[fd], note);
+	}
+	*line = ft_strsub(store[fd], 0, counter(store[fd]));
+	if (to_delete(&store[fd]) == 0)
+	{
+		free(note);
+		return (0);
+	}
+	updating(&store[fd]);
+	free(note);
 	return (1);
 }
