@@ -1,46 +1,16 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   piece.c                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: kmills <kmills@student.42.fr>              +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2019/09/19 19:20:43 by kmills            #+#    #+#             */
+/*   Updated: 2019/09/19 19:20:43 by kmills           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "filler.h"
-
-int		is_piece_str_ok(t_filler *filler, char *str, int gnl)
-{
-	if ((int)ft_strlen(str) != filler->piece_x_size)
-	{
-		free(str);
-		ft_putendl_fd("INVALID PIECE", 2);
-		return (0);
-	}
-	if (gnl == -1 || gnl == 0)
-		return (0);
-	return (1);
-}
-
-int		scan_piece(t_filler *filler)
-{
-	int		i;
-	char	*str;
-	int		j;
-	int		gnl;
-
-	j = 0;
-	i = 0;
-	gnl = 0;
-	while (i < filler->piece_y_size && (gnl = get_next_line(0, &str)))
-	{
-		if (!is_piece_str_ok(filler, str, gnl))
-			return (0);
-		while (str[j])
-		{
-			if (str[j] == '.')
-				filler->piece[j][i] = 0;
-			else
-				filler->piece[j][i] = 1;
-			j++;
-		}
-		i++;
-		j = 0;
-		free(str);
-	}
-	return (1);
-}
 
 void	make_real_piece_size(t_filler *filler)
 {
@@ -68,19 +38,6 @@ void	make_real_piece_size(t_filler *filler)
 	}
 	filler->real_piece_x_size = mi;
 	filler->real_piece_y_size = mj;
-}
-
-void	allocate_mem_for_piece(t_filler *filler)
-{
-	int	i;
-
-	i = 0;
-	filler->piece = (int **)xmalloc(sizeof(int *) * filler->piece_x_size);
-	while (i < filler->piece_x_size)
-	{
-		filler->piece[i] = (int *)xmalloc(sizeof(int) * filler->piece_y_size);
-		i++;
-	}
 }
 
 void	parse_piece(t_filler *filler, char *str)

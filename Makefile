@@ -1,6 +1,6 @@
 MAKE=make
 NAME=kmills.filler
-SRCS=SRCS/main.c SRCS/piece.c SRCS/map.c SRCS/parcing.c
+SRCS=SRCS/main.c SRCS/piece.c SRCS/map.c SRCS/parcing.c SRCS/memory.c SRCS/player.c  SRCS/heat_map.c
 OBJS=$(SRCS:SRCS%.c=OBJS%.o)
 HEADER=INCLUDES/filler.h
 INCLUDES=INCLUDES
@@ -28,7 +28,7 @@ $(LIBFT): $(LIBFTCILES)
 	@$(MAKE) -C libft
 
 OBJS/%.o: SRCS/%.c $(HEADER)
-	@gcc -g -c $(FLAGS) $< -I$(INCLUDES) -I$(LIBFT) -o $@
+	@gcc -c $(FLAGS) $< -I$(INCLUDES) -I$(LIBFT) -o $@
 
 clean:
 	@rm -f $(OBJS)

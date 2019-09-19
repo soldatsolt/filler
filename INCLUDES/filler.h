@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   filler.h                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: kmills <kmills@student.42.fr>              +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2019/09/19 19:20:50 by kmills            #+#    #+#             */
+/*   Updated: 2019/09/19 19:20:50 by kmills           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #ifndef FILLER_H
 # define FILLER_H
 # include "../libft/libft.h"
@@ -54,5 +66,10 @@ void			make_real_piece_size(t_filler *filler);
 void			make_heat_map(t_filler *filler);
 int				check_for_bad_map_in_scaning(t_filler *filler, char *str);
 void			free_only_map(t_filler *filler);
+void			str_free_if_is_str(char *str);
+int				is_place_to_put(t_filler *filler, int summ);
+void			read_to_the_end(void);
+void			bad_map(t_filler *filler);
+int				is_piece_str_ok(t_filler *filler, char *str, int gnl);
 
 #endif

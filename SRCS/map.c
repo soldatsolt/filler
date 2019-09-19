@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   map.c                                              :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: kmills <kmills@student.42.fr>              +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2019/09/19 19:20:39 by kmills            #+#    #+#             */
+/*   Updated: 2019/09/19 19:20:39 by kmills           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "filler.h"
 
 void	find_map_size(t_filler *filler, char *str)
@@ -9,27 +21,6 @@ void	find_map_size(t_filler *filler, char *str)
 	while (ft_isdigit(*str))
 		str--;
 	filler->x_size = ft_atoi(str);
-}
-
-void	mark_dots_after_player(t_filler *filler)
-{
-	if (filler->player && !filler->dot_big && !filler->dot_small)
-	{
-		if ((filler->player) == 1)
-		{
-			filler->dot_big = 'O';
-			filler->dot_small = 'o';
-			filler->enemy_dot_small = 'x';
-			filler->enemy_dot_big = 'X';
-		}
-		if ((filler->player) == 2)
-		{
-			filler->dot_big = 'X';
-			filler->dot_small = 'x';
-			filler->enemy_dot_small = 'o';
-			filler->enemy_dot_big = 'O';
-		}
-	}
 }
 
 void	print_map(t_filler *filler)
@@ -52,61 +43,10 @@ void	print_map(t_filler *filler)
 	}
 }
 
-void	allocate_mem_for_map(t_filler *filler)
-{
-	int	i;
-
-	i = 0;
-	filler->map = (int **)xmalloc(sizeof(int *) * filler->x_size);
-	while (i < filler->x_size)
-	{
-		filler->map[i] = (int *)xmalloc(sizeof(int) * filler->y_size);
-		i++;
-	}
-}
-
-void	free_only_map(t_filler *filler)
-{
-	int	i;
-
-	i = 0;
-	while (i < filler->x_size)
-	{
-		free(filler->map[i]);
-		filler->map[i] = NULL;
-		i++;
-	}
-	free(filler->map);
-	filler->map = NULL;
-}
-
 void	bad_map(t_filler *filler)
 {
 	free_only_map(filler);
 	ft_putendl_fd("INVALID MAP", 2);
-}
-
-int		check_for_bad_map_in_scaning(t_filler *filler, char *str)
-{
-	if (ft_isdigit(str[0]) && (int)ft_strlen(str) != 4 + filler->x_size)
-	{
-		bad_map(filler);
-		free(str);
-		return (0);
-	}
-	if (ft_isdigit(str[0]) && (ft_atoi(str) > filler->y_size - 1))
-	{
-		bad_map(filler);
-		free(str);
-		return (0);
-	}
-	if (str[0] == '.' || str[0] == '*')
-	{
-		ft_putendl_fd("INVALID PIECE", 2);
-		free(str);
-		return (0);
-	}
-	return (1);
 }
 
 void	str_free_if_is_str(char *str)
@@ -115,118 +55,8 @@ void	str_free_if_is_str(char *str)
 		free(str);
 }
 
-int		scan_grid_to_map(t_filler *filler)
-{
-	char	*str;
-
-	while (get_next_line(0, &str))
-	{
-		if (str[0] == 'P' && str[1] == 'l')
-		{
-			find_map_size(filler, str);
-			allocate_mem_for_map(filler);
-		}
-		if (!check_for_bad_map_in_scaning(filler, str))
-			return (0);
-		if (ft_strchr_n(str, filler->dot_big) || ft_strchr_n(str, \
-		filler->dot_small) || ft_strchr_n(str, filler->enemy_dot_big) || \
-		ft_strchr_n(str, filler->enemy_dot_small))
-			parse_dots(filler, str);
-		if (str[0] == 'P' && str[1] == 'i')
-		{
-			parse_piece(filler, str);
-			ft_strdel(&str);
-			break ;
-		}
-		ft_strdel(&str);
-	}
-	str_free_if_is_str(str);
-	return (1);
-}
-
 void	nowhere_to_put(t_filler *filler)
 {
 	ft_printf("0 0\n");
 	free_map_and_piece(filler);
-}
-
-void	increase_neighbours_to_n1(t_filler *filler, int x, int y, int n)
-{
-	if (x > 0 && y > 0 && filler->map[x - 1][y - 1] != -10 && \
-	filler->map[x - 1][y - 1] != -20)
-		filler->map[x - 1][y - 1] = filler->map[x - 1][y - 1] < n ? \
-		n : filler->map[x - 1][y - 1];
-	if (x < filler->x_size - 1 && y < filler->y_size - 1 && \
-	filler->map[x + 1][y + 1] != -10 && filler->map[x + 1][y + 1] != -20)
-		filler->map[x + 1][y + 1] = filler->map[x + 1][y + 1] < n ? n : \
-		filler->map[x + 1][y + 1];
-	if (x > 0 && y < filler->y_size - 1 && filler->map[x - 1][y + 1] != -20 && \
-	filler->map[x - 1][y + 1] != -10)
-		filler->map[x - 1][y + 1] = filler->map[x - 1][y + 1] < n ? n : \
-		filler->map[x - 1][y + 1];
-	if (x < filler->x_size - 1 && y > 0 && filler->map[x + 1][y - 1] != -10 && \
-	filler->map[x + 1][y - 1] != -20)
-		filler->map[x + 1][y - 1] = filler->map[x + 1][y - 1] < n ? n : \
-		filler->map[x + 1][y - 1];
-}
-
-void	increase_neighbours_to_n(t_filler *filler, int x, int y, int n)
-{
-	if (y < filler->y_size - 1 && filler->map[x][y + 1] != -10 && \
-	filler->map[x][y + 1] != -20)
-		filler->map[x][y + 1] = (filler->map[x][y + 1] < n) ? n : \
-		filler->map[x][y + 1];
-	if (y > 0 && filler->map[x][y - 1] != -10 && filler->map[x][y - 1] != -20)
-		filler->map[x][y - 1] = (filler->map[x][y - 1] < n) ? n : \
-		filler->map[x][y - 1];
-	if (x < filler->x_size - 1 && filler->map[x + 1][y] != -10 && \
-	filler->map[x + 1][y] != -20)
-		filler->map[x + 1][y] = (filler->map[x + 1][y] < n) ? n : \
-		filler->map[x + 1][y];
-	if (x > 0 && filler->map[x - 1][y] != -10 && filler->map[x - 1][y] != -20)
-		filler->map[x - 1][y] = (filler->map[x - 1][y] < n) ? n : \
-		filler->map[x - 1][y];
-	increase_neighbours_to_n1(filler, x, y, n);
-}
-
-void	increase_near_enemy(t_filler *filler, int n, int to)
-{
-	int		i;
-	int		j;
-
-	i = 0;
-	j = 0;
-	while (j < filler->y_size)
-	{
-		while (i < filler->x_size)
-		{
-			if (filler->map[i][j] == n)
-				increase_neighbours_to_n(filler, i, j, to);
-			i++;
-		}
-		i = 0;
-		j++;
-	}
-}
-
-void	make_heat_map(t_filler *filler)
-{
-	int		i;
-	int		x;
-	int		y;
-	int		j;
-
-	j = 0;
-	i = 1;
-	x = 0;
-	y = 0;
-	while (i < (filler->x_size > filler->y_size ? \
-	filler->x_size : filler->y_size))
-	{
-		increase_near_enemy(filler, -20, i);
-		j = i + 1;
-		while (j--)
-			increase_near_enemy(filler, j, j - 1);
-		i++;
-	}
 }

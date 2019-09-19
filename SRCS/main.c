@@ -1,16 +1,16 @@
-#include "filler.h"
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   main.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: kmills <kmills@student.42.fr>              +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2019/09/19 19:20:35 by kmills            #+#    #+#             */
+/*   Updated: 2019/09/19 19:20:37 by kmills           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
-void	bzero_filler(t_filler *filler)
-{
-	filler->map = NULL;
-	filler->player = 0;
-	filler->x_size = 0;
-	filler->y_size = 0;
-	filler->dot_big = 0;
-	filler->dot_small = 0;
-	filler->enemy_dot_small = 0;
-	filler->enemy_dot_big = 0;
-}
+#include "filler.h"
 
 int		summ_map_and_piece(t_filler *filler, int x, int y)
 {
@@ -81,30 +81,6 @@ int		is_9_is_alone(t_filler *filler)
 	return (0);
 }
 
-void	free_map_and_piece(t_filler *filler)
-{
-	int	i;
-
-	i = 0;
-	while (i < filler->x_size)
-	{
-		free(filler->map[i]);
-		filler->map[i] = NULL;
-		i++;
-	}
-	i = 0;
-	while (i < filler->piece_x_size)
-	{
-		free(filler->piece[i]);
-		filler->piece[i] = NULL;
-		i++;
-	}
-	free(filler->map);
-	filler->map = NULL;
-	free(filler->piece);
-	filler->piece = NULL;
-}
-
 void	loop_filler(t_filler *filler)
 {
 	mark_dots_after_player(filler);
@@ -127,19 +103,6 @@ void	loop_filler(t_filler *filler)
 		ft_printf("%d %d\n", filler->y, filler->x);
 		free_map_and_piece(filler);
 	}
-}
-
-void	read_to_the_end(void)
-{
-	char	*str;
-
-	while (get_next_line(0, &str))
-	{
-		free(str);
-		str = NULL;
-	}
-	if (str)
-		free(str);
 }
 
 int		main(void)
