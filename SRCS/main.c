@@ -6,10 +6,6 @@ void	bzero_filler(t_filler *filler)
 	filler->player = 0;
 	filler->x_size = 0;
 	filler->y_size = 0;
-	filler->start_x = -1;
-	filler->start_y = -1;
-	filler->enemy_start_x = -1;
-	filler->enemy_start_y = -1;
 	filler->dot_big = 0;
 	filler->dot_small = 0;
 	filler->enemy_dot_small = 0;
@@ -114,17 +110,36 @@ void	loop_filler(t_filler *filler)
 	mark_dots_after_player(filler);
 	while (1)
 	{
-		scan_grid_to_map(filler);
+		if (!scan_grid_to_map(filler))
+			break;
 		if (!filler->map)
 			break ;
 		make_heat_map(filler);
 		allocate_mem_for_piece(filler);
-		scan_piece(filler);
+		if (!scan_piece(filler))
+		{
+			free_map_and_piece(filler);
+			break ;
+		}
 		make_real_piece_size(filler);
-		place_to_put_piece(filler, 0, 0);
+		if (!place_to_put_piece(filler, 0, 0))
+			break ;
 		ft_printf("%d %d\n", filler->y, filler->x);
 		free_map_and_piece(filler);
 	}
+}
+
+void	read_to_the_end(void)
+{
+	char	*str;
+
+	while (get_next_line(0, &str))
+	{
+		free(str);
+		str = NULL;
+	}
+	if (str)
+		free(str);
 }
 
 int		main(void)
@@ -132,8 +147,13 @@ int		main(void)
 	t_filler	filler;
 
 	fd = open("/Users/kmills/WOW42/algos/filler/VM", O_RDWR | O_CREAT, 0644);
-	parser(&filler);
+	if (!parser(&filler))
+	{
+		ft_putendl_fd("INVALID HEADER", 2);
+		return (0);
+	}	
 	loop_filler(&filler);
+	read_to_the_end();
 	close(fd);
 	return (0);
 }

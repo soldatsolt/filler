@@ -8,10 +8,7 @@ int		player_number(char *str)
 	s = NULL;
 	l = (int)ft_strlen(str);
 	if (ft_strncmp(str, "$$$ exec p", 10))
-	{
-		ft_putendl_fd("WRONG HEADER", 2);
-		exit(0);
-	}
+		return (0);
 	if (l < 15)
 		return (0);
 	s = ft_strdup(str);
@@ -26,34 +23,7 @@ int		player_number(char *str)
 	return (0);
 }
 
-void	find_start_point(t_filler *filler, char *str)
-{
-	int		i;
-	char	*s;
-
-	i = 4;
-	if (!(filler->dot_big && filler->dot_small) && (ft_strchr_n(str, \
-	filler->dot_big) || ft_strchr_n(str, filler->enemy_dot_big)))
-		return ;
-	s = ft_strdup(str);
-	if (ft_strchr_n(str, filler->dot_big))
-	{
-		filler->start_y = ft_atoi(str);
-		while (str[i] == '.' || str[i] == filler->enemy_dot_big)
-			i++;
-		filler->start_x = i - 4;
-	}
-	if (ft_strchr_n(str, filler->enemy_dot_big))
-	{
-		filler->enemy_start_y = ft_atoi(s);
-		while (s[i] == '.' || s[i] == filler->dot_big)
-			i++;
-		filler->enemy_start_x = i - 4;
-	}
-	ft_strdel(&s);
-}
-
-void	parser(t_filler *filler)
+int		parser(t_filler *filler)
 {
 	char	*str;
 
@@ -62,6 +32,9 @@ void	parser(t_filler *filler)
 	get_next_line(0, &str);
 	filler->player = player_number(str);
 	ft_strdel(&str);
+	if (!(filler->player == 1 || filler->player == 2))
+		return (0);
+	return (1);
 }
 
 void	parse_dots(t_filler *filler, char *str)

@@ -68,7 +68,7 @@ void	allocate_mem_for_map(t_filler *filler)
 void	free_only_map(t_filler *filler)
 {
 	int	i;
-
+	
 	i = 0;
 	while (i < filler->x_size)
 	{
@@ -83,19 +83,33 @@ void	free_only_map(t_filler *filler)
 void	bad_map(t_filler *filler)
 {
 	free_only_map(filler);
-	ft_putendl_fd("BAD MAP", 2);
-	exit(0);
+	ft_putendl_fd("INVALID MAP", 2);
 }
 
-void	check_for_bad_map_in_scaning(t_filler *filler, char *str)
+int		check_for_bad_map_in_scaning(t_filler *filler, char *str)
 {
 	if (ft_isdigit(str[0]) && (int)ft_strlen(str) != 4 + filler->x_size)
+	{
 		bad_map(filler);
+		free(str);
+		return (0);
+	}
 	if (ft_isdigit(str[0]) && (ft_atoi(str) > filler->y_size - 1))
+	{
 		bad_map(filler);
+		free(str);
+		return (0);
+	}
+	if (str[0] == '.' || str[0] == '*')
+	{
+		ft_putendl_fd("INVALID PIECE", 2);
+		free(str);
+		return (0);
+	}
+	return (1);
 }
 
-void	scan_grid_to_map(t_filler *filler)
+int		scan_grid_to_map(t_filler *filler)
 {
 	char	*str;
 
@@ -106,7 +120,8 @@ void	scan_grid_to_map(t_filler *filler)
 			find_map_size(filler, str);
 			allocate_mem_for_map(filler);
 		}
-		check_for_bad_map_in_scaning(filler, str);
+		if (!check_for_bad_map_in_scaning(filler, str))
+			return (0);
 		if (ft_strchr_n(str, filler->dot_big) || ft_strchr_n(str, \
 		filler->dot_small) || ft_strchr_n(str, filler->enemy_dot_big) || \
 		ft_strchr_n(str, filler->enemy_dot_small))
@@ -121,13 +136,13 @@ void	scan_grid_to_map(t_filler *filler)
 	}
 	if (str)
 		free(str);
+		return (1);
 }
 
 void	nowhere_to_put(t_filler *filler)
 {
 	ft_printf("0 0\n");
 	free_map_and_piece(filler);
-	exit(0);
 }
 
 void	increase_neighbours_to_n1(t_filler *filler, int x, int y, int n)

@@ -1,6 +1,6 @@
 #include "filler.h"
 
-void	scan_piece(t_filler *filler)
+int		scan_piece(t_filler *filler)
 {
 	int		i;
 	char	*str;
@@ -12,6 +12,12 @@ void	scan_piece(t_filler *filler)
 	gnl = 0;
 	while (i < filler->piece_y_size && (gnl = get_next_line(0, &str)))
 	{
+		if ((int)ft_strlen(str) != filler->piece_x_size)
+		{
+			free(str);
+			ft_putendl_fd("INVALID PIECE", 2);
+			return (0);
+		}
 		while (str[j])
 		{
 			if (str[j] == '.')
@@ -23,10 +29,11 @@ void	scan_piece(t_filler *filler)
 		i++;
 		j = 0;
 		if (gnl == -1 || gnl == 0)
-			exit(0);
+			return (0);
 		free(str);
 		str = NULL;
 	}
+	return (1);
 }
 
 void	make_real_piece_size(t_filler *filler)
@@ -99,7 +106,7 @@ void	print_piece(t_filler *filler)
 	}
 }
 
-void	place_to_put_piece(t_filler *filler, int i, int j)
+int		place_to_put_piece(t_filler *filler, int i, int j)
 {
 	int		summ;
 	int		i_summ;
@@ -123,5 +130,9 @@ void	place_to_put_piece(t_filler *filler, int i, int j)
 		j++;
 	}
 	if (summ == -100)
+	{
 		nowhere_to_put(filler);
+		return (0);
+	}
+	return (1);
 }
