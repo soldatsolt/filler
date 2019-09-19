@@ -111,7 +111,7 @@ void	loop_filler(t_filler *filler)
 	while (1)
 	{
 		if (!scan_grid_to_map(filler))
-			break;
+			break ;
 		if (!filler->map)
 			break ;
 		make_heat_map(filler);
@@ -146,14 +146,12 @@ int		main(void)
 {
 	t_filler	filler;
 
-	fd = open("/Users/kmills/WOW42/algos/filler/VM", O_RDWR | O_CREAT, 0644);
 	if (!parser(&filler))
 	{
 		ft_putendl_fd("INVALID HEADER", 2);
 		return (0);
-	}	
+	}
 	loop_filler(&filler);
 	read_to_the_end();
-	close(fd);
 	return (0);
 }

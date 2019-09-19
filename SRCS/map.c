@@ -68,7 +68,7 @@ void	allocate_mem_for_map(t_filler *filler)
 void	free_only_map(t_filler *filler)
 {
 	int	i;
-	
+
 	i = 0;
 	while (i < filler->x_size)
 	{
@@ -109,6 +109,12 @@ int		check_for_bad_map_in_scaning(t_filler *filler, char *str)
 	return (1);
 }
 
+void	str_free_if_is_str(char *str)
+{
+	if (str)
+		free(str);
+}
+
 int		scan_grid_to_map(t_filler *filler)
 {
 	char	*str;
@@ -134,9 +140,8 @@ int		scan_grid_to_map(t_filler *filler)
 		}
 		ft_strdel(&str);
 	}
-	if (str)
-		free(str);
-		return (1);
+	str_free_if_is_str(str);
+	return (1);
 }
 
 void	nowhere_to_put(t_filler *filler)

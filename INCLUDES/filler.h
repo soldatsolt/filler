@@ -11,8 +11,6 @@
 # include <grp.h>
 # include <uuid/uuid.h>
 
-int fd;
-
 typedef	struct	s_filler
 {
 	int			x;
